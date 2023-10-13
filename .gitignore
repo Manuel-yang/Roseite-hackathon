@@ -1,0 +1,11 @@
+
+.anchor
+.DS_Store
+release/
+debug/
+bpfel-unknown-unknown/
+deploy/
+**/*.rs.bk
+node_modules/
+test-ledger
+.env

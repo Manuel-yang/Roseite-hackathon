@@ -1,0 +1,11 @@
+import { useContext } from "react";
+import TweetsContext from "../contexts/TweetsContext";
+
+export default function useTweets() {
+  const context = useContext(TweetsContext);
+  if (typeof context === "undefined") {
+    throw new Error("useTweets must be used within a TweetsProvider");
+  }
+
+  return context;
+}

@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./programs/nft_social_media/Cargo.toml"
+    ]
+}

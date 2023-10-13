@@ -1,0 +1,19 @@
+{
+    "name": "Roseite",
+    "symbol": "RSI",
+    "description": "Roseite socialFi Nft account",
+    "seller_fee_basis_points": 500,
+    "image": "https://shdw-drive.genesysgo.net/7vMHNrU6Q8yoijrNz4oDbqzCZtH7o8a3Nuq2fgj8K7Vk/demoNft.png",
+    "properties":
+    {
+        "files":
+        [
+            {
+                "uri": "https://shdw-drive.genesysgo.net/7vMHNrU6Q8yoijrNz4oDbqzCZtH7o8a3Nuq2fgj8K7Vk/demoNft.png",
+                "type": "image/jpg"
+            }
+        ],
+        "fans":
+        []
+    }
+}

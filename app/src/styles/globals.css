@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --text-color-primary: 17 24 39;
+    --text-color-secondary: 55 65 81;
+    --text-color-third: 107 114 128;
+    --fill-color-primary: 255 255 255;
+    --fill-color-secondary: 243 244 246;
+    --fill-color-third: 229 231 235;
+    --fill-opacity: 0.5;
+    --border-color: 156 163 175;
+    --border-opacity: 0.3;
+    --focus-color: 107 114 128;
+    --scrollbar-background: 229 231 235;
+    --scrollbar-thumb: 156 163 175;
+    --scrollbar-thumb-hover: 107 114 128;
+  }
+
+  .dark {
+    --text-color-primary: 245 245 245;
+    --text-color-secondary: 212 212 212;
+    --text-color-third: 115 115 115;
+    --fill-color-primary: 23 23 23;
+    --fill-color-secondary: 38 38 38;
+    --fill-color-third: 64 64 64;
+    --fill-opacity: 0.5;
+    --border-color: 82 82 82;
+    --border-opacity: 0.5;
+    --focus-color: 115 115 115;
+    --scrollbar-background: 64 64 64;
+    --scrollbar-thumb: 115 115 115;
+    --scrollbar-thumb-hover: 162 162 162;
+  }
+}
+
+@layer components {
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 2px;
+    background: linear-gradient(to right, #9945ff, #14f195);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .card-content {
+    z-index: 1;
+  }
+
+  .toast-message {
+    font-size: 14px;
+  }
+
+  .glass {
+    border: none;
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+    background-color: transparent;
+    background-image: linear-gradient(135deg, rgb(128 128 128 / 50%) 0%, rgb(0 0 0 / 5%) 100%),
+      linear-gradient(100deg, rgb(128 128 128 / 50%) 25%, rgb(0 0 0 / 5%) 25%);
+    box-shadow: 0 0 0 1px rgb(128 128 128 / 50%) inset, 0 0 0 2px #0000000d;
+    text-shadow: 0 1px rgb(0 0 0 / 5%);
+  }
+
+  /** ------------------------ThemeSwitcher component--------------------------------- */
+  .swap {
+    position: relative;
+    display: inline-grid;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    place-content: center;
+    cursor: pointer;
+  }
+
+  .swap > * {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    transition-duration: 0.3s;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: transform, opacity;
+  }
+
+  .swap-rotate .swap-on {
+    --tw-rotate: 45deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x))
+      skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .swap .swap-on {
+    opacity: 0;
+  }
+
+  .swap-active .swap-on {
+    opacity: 1;
+  }
+
+  .swap-rotate.swap-active .swap-on {
+    --tw-rotate: 0deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x))
+      skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .swap-rotate.swap-active .swap-off {
+    --tw-rotate: -45deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x))
+      skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .swap.swap-active .swap-off {
+    opacity: 0;
+  }
+  /** -------------------------------------------------------------------------------- */
+}
+
+[type="text"]:focus {
+  @apply outline-none border border-skin-secondary ring-transparent;
+}
+
+textarea {
+  @apply border-transparent bg-transparent;
+}
+
+textarea:focus {
+  @apply outline-none border-transparent ring-transparent;
+}
+
+.szh-menu {
+  background-color: rgb(var(--fill-color-secondary)) !important;
+}
+
+.szh-menu__item--hover {
+  background-color: rgb(var(--fill-color-third)) !important;
+}
+
+.wallet-adapter-dropdown {
+  @apply w-full;
+}
+
+.wallet-adapter-button {
+  @apply w-full rounded-full;
+}
+
+.wallet-adapter-button-trigger {
+  @apply justify-center bg-primary-500 !important;
+}
+
+.wallet-adapter-dropdown-list {
+  @apply top-auto bottom-full md:top-full md:bottom-auto md:left-0 md:right-auto;
+}
+
+.wallet-adapter-dropdown-list-active {
+  @apply -translate-y-3 transform md:translate-y-3;
+}
+
+::-webkit-scrollbar {
+  height: 12px;
+  width: 12px;
+  background: rgb(var(--scrollbar-background));
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--scrollbar-thumb));
+  border-radius: 1ex;
+  -webkit-border-radius: 1ex;
+  box-shadow: 0 1px 2px rgb(var(--scrollbar-background));
+  -webkit-box-shadow: 0 1px 2px rgb(var(--scrollbar-background));
+}
+
+::-webkit-scrollbar-corner {
+  background: rgb(var(--scrollbar-background));
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--scrollbar-thumb-hover));
+}

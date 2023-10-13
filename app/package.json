@@ -1,0 +1,51 @@
+{
+  "name": "solana-twitter-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "export": "next export",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@project-serum/anchor": "^0.25.0",
+    "@solana/wallet-adapter-base": "^0.9.17",
+    "@solana/wallet-adapter-ledger": "^0.9.19",
+    "@solana/wallet-adapter-phantom": "^0.9.16",
+    "@solana/wallet-adapter-react": "^0.15.19",
+    "@solana/wallet-adapter-react-ui": "^0.9.17",
+    "@solana/wallet-adapter-slope": "^0.5.15",
+    "@solana/wallet-adapter-solflare": "^0.6.17",
+    "@solana/wallet-adapter-sollet": "^0.11.11",
+    "@solana/wallet-adapter-torus": "^0.11.22",
+    "@solana/wallet-adapter-wallets": "^0.19.0",
+    "@solana/web3.js": "^1.63.1",
+    "@szhsin/react-menu": "^3.2.0",
+    "dayjs": "^1.11.5",
+    "flowbite": "^1.5.3",
+    "flowbite-react": "^0.2.1",
+    "js-confetti": "^0.11.0",
+    "next": "12.3.1",
+    "react": "18.2.0",
+    "react-autosize-textarea": "^7.1.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.36.1",
+    "react-icons": "^4.6.0",
+    "react-toastify": "^9.0.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
+    "@types/bs58": "^4.0.1",
+    "@types/node": "18.7.23",
+    "@types/react": "18.0.21",
+    "@types/react-dom": "18.0.6",
+    "autoprefixer": "^10.4.12",
+    "eslint": "8.24.0",
+    "eslint-config-next": "12.3.1",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8",
+    "typescript": "4.8.4"
+  }
+}
