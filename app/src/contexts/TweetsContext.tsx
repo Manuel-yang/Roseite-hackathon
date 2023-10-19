@@ -2,9 +2,11 @@ import { PublicKey } from "@solana/web3.js";
 import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import useWorkspace from "../hooks/useWorkspace";
 import { Tweet } from "../models";
-import { sendTweet } from "../pages/api/tweets";
+import { sendTweet, deleteTweet } from "../pages/api/tweets";
 // import { deleteTweet, getTweet, paginateTweets, sendTweet, updateTweet } from "../pages/api/tweets";
 import useNftAccount from "../hooks/useNftAccount";
+import { postPdaAccount } from "./NftAccountContext";
+import BN from "bn.js";
 
 interface TweetsContextState {
   tweets: Tweet[];
@@ -15,7 +17,7 @@ interface TweetsContextState {
   loadMore(): void;
   sendTweet(tag: string, content: string): Promise<{ tweet: Tweet | null; message: string }>;
   // updateTweet(tweet: Tweet, tag: string, content: string): Promise<{ success: boolean; message: string }>;
-  deleteTweet(tweetKey: PublicKey): Promise<{ success: boolean; message: string }>;
+  deleteTweet(nftMintAddress: PublicKey, postPdaAddress: PublicKey, postId: BN): Promise<{ success: boolean; message: string }>;
   // getTweet(pubkey: PublicKey): Promise<Tweet | null>;
 }
 
@@ -29,7 +31,7 @@ export function TweetsProvider({ children }: { children: ReactNode }) {
   const [hasMore, setHasMore] = useState(false);
 
   const workspace = useWorkspace();
-  const {selectedNft, postPdaAddressList, setPostPdaAddressList} = useNftAccount();
+  const {selectedNft, rawPostPdaAccountList, postPdaAddressList, setPostPdaAddressList, setRawPostPdaAccountList} = useNftAccount();
   const onNewPage = (newTweets: Tweet[], more: boolean) => {
     setTweets((prev) => [...prev, ...newTweets]);
     setLoading(false);
@@ -62,10 +64,14 @@ export function TweetsProvider({ children }: { children: ReactNode }) {
     async (tag: string, content: string) => {
       if (workspace && selectedNft) {
         const nftMintAddress = new PublicKey(selectedNft.mint);
-        let result = await sendTweet(workspace, nftMintAddress, content);
-        if (result.tweet) {
-          setPostPdaAddressList((prev: PublicKey[]): PublicKey[] => [...prev, result.postPdaAddress]);
-          setTweets((prev) => [result.tweet, ...prev]);
+        const result = await sendTweet(workspace, nftMintAddress, content);
+        if (result.success && result.postPdaAddress) {
+          const newPostPdaAddress = await workspace.program.account.postPda.fetch(result.postPdaAddress)
+          const tempPostPdaAccount = newPostPdaAddress as unknown as postPdaAccount
+          tempPostPdaAccount.postPdaAddress = result.postPdaAddress
+          console.log(tempPostPdaAccount)
+          setPostPdaAddressList((prev) => [...prev, result.postPdaAddress]);
+          setRawPostPdaAccountList((prev) => [...prev, tempPostPdaAccount])
         }
         return result;
       } else {
@@ -92,22 +98,24 @@ export function TweetsProvider({ children }: { children: ReactNode }) {
   // );
 
   const _deleteTweet = useCallback(
-    async (tweetKey: PublicKey) => {
-      // if (workspace) {
-      //   const result = await deleteTweet(workspace, tweetKey);
-      //   if (result.success) {
-      //     setTweets((prev) => prev.filter((t) => t.publickey.toBase58() !== tweetKey.toBase58()));
-      //   }
-      //   return result;
-      // } else {
-      return {
-        success: false,
-        message: "Connect wallet to delete tweet...",
-      };
-      // }
+    async (nftMintAddress: PublicKey, postPdaAddress: PublicKey, postId: BN) => {
+      if (workspace) {
+        const result = await deleteTweet(workspace, nftMintAddress, postPdaAddress, postId);
+        if (result.success) {
+          setPostPdaAddressList(prev => prev.filter(element => element !== postPdaAddress))
+          setRawPostPdaAccountList((prev) => prev.filter((element) => element.postPdaAddress !== postPdaAddress))
+        }
+        return result;
+      } else {
+        return {
+          success: false,
+          message: "Connect wallet to delete tweet...",
+        };
+      }
+ 
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tweets, workspace]
+    [workspace, selectedNft, postPdaAddressList, rawPostPdaAccountList]
   );
 
   // const getTweetFromPublicKey = useCallback(

@@ -16,11 +16,14 @@ export type nftConfigPdaAccount = {
 };
 
 export type postPdaAccount = {
+  postPdaAddress: PublicKey,
+  postId: BN,
   content: string;
   likeNum: BN;
   nftAddress: PublicKey;
   reviewNum: BN;
   timeStamp: BN;
+  status: number;
 };
 
 interface NftAccountState {
@@ -30,7 +33,7 @@ interface NftAccountState {
   rawPostPdaAccountList: postPdaAccount[];
   postPdaAccountList: postPdaAccount[];
   setPostPdaAddressList: React.Dispatch<React.SetStateAction<PublicKey[]>>;
-  setRawPostPdaAccountList: (postPdaAddressList: postPdaAccount[]) => void;
+  setRawPostPdaAccountList: React.Dispatch<React.SetStateAction<postPdaAccount[]>>;
   setPostPdaAccountList: (postPdaAddressList: postPdaAccount[]) => void;
 }
 
@@ -59,44 +62,38 @@ export function NftAccountProvidr({ children }: { children: ReactNode }) {
   }, [selectedNft, NftScanner]);
 
   // get all the pda addresses of selectedNft
+  // init all the post data
   useEffect(() => {
-    if (nftConfigPdaAccount) {
-      const postsNum = nftConfigPdaAccount.postsNum.toNumber();
-      for (let i = 0; i < postsNum; i++) {
-        getPostPda(nftConfigPdaAccount!.nftMint, i).then((res) => {
-          setPostPdaAddressList((prev) => [...prev, new PublicKey(res[0].toBase58())]);
-        });
+    const fetchPostPdaAddressList = async () => {
+      if (nftConfigPdaAccount && workspace) {
+        const postsNum = nftConfigPdaAccount.postsNum.toNumber();
+        if (postsNum != postPdaAddressList.length) {
+          for (let i = 0; i < postsNum; i++) {
+            let res = await getPostPda(nftConfigPdaAccount!.nftMint, i)
+            setPostPdaAddressList((prev) => [...prev, res[0]]);
+            workspace.program.account.postPda
+            .fetch(res[0])
+            .then((postPdaAccount) => {
+              let tempPostPdaAccount = postPdaAccount as unknown as postPdaAccount
+              tempPostPdaAccount.postPdaAddress = res[0]
+              setRawPostPdaAccountList((prev) => [...prev, tempPostPdaAccount]);
+            });
+          }
+        }
       }
     }
-  }, [nftConfigPdaAccount]);
+    fetchPostPdaAddressList()
+  }, [workspace, nftConfigPdaAccount]);
 
-  // get content of post pda
-  useEffect(() => {
-    if (postPdaAddressList && workspace) {
-      // init data
-      if (nftConfigPdaAccount.postsNum.toNumber() == postPdaAddressList.length) {
-        postPdaAddressList.forEach((pdaAddress) => {
-          workspace.program.account.postPda.fetch(pdaAddress).then((postPdaAccount) => {
-            setRawPostPdaAccountList((prev) => [...prev, postPdaAccount]);
-          });
-        });
-      }
-      // add new tweet after tweeting
-      if (rawPostPdaAccountList.length == postPdaAddressList.length - 1) {
-        workspace.program.account.postPda
-          .fetch(postPdaAddressList[postPdaAddressList.length - 1])
-          .then((postPdaAccount) => {
-            setRawPostPdaAccountList((prev) => [...prev, postPdaAccount]);
-          });
-      }
-    }
-  }, [postPdaAddressList]);
-
+  // // list all the post which status is post by time
   useEffect(() => {
     if (workspace && rawPostPdaAccountList) {
       let sortByTimestamp = rawPostPdaAccountList.sort((x, y) => {
         return x.timeStamp.toNumber() - y.timeStamp.toNumber();
       });
+      sortByTimestamp = sortByTimestamp.filter((postPdaAccount) => {
+        return postPdaAccount.status == 0
+      })
       setPostPdaAccountList(sortByTimestamp.reverse());
     }
   }, [rawPostPdaAccountList]);

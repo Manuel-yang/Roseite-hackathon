@@ -4,7 +4,7 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, TokenAccount};
 
 pub fn delete_post(ctx: Context<DeletePost>, _post_id: u64) -> Result<()> {
-    let _ = ctx.accounts.nft_config_pda.decrease_posts_num();
+    let _ = ctx.accounts.post_pda.update_post_pda_status(1);
     Ok(())
 }
 
@@ -20,7 +20,7 @@ pub struct DeletePost<'info> {
     #[account(
         mut,
         seeds = [b"post_pda",nft_config_pda.nft_mint.as_ref(), &_post_id.to_le_bytes()],
-        close = payer,
+        // close = payer,
         bump
     )]
     pub post_pda: Account<'info, PostPda>,

@@ -1,6 +1,6 @@
 import { Connection, PublicKey } from "@solana/web3.js";
 import { Provider, AnchorProvider, Program } from "@project-serum/anchor";
-import idl from "../idl/solana_twitter.json";
+import idl from "../../../target/idl/nft_social_media.json";
 import { AnchorWallet, useAnchorWallet, useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useMemo } from "react";
 import { createProgram } from "../utils/utils";

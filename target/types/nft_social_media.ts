@@ -437,6 +437,10 @@ export type NftSocialMedia = {
         "kind": "struct",
         "fields": [
           {
+            "name": "postId",
+            "type": "u64"
+          },
+          {
             "name": "nftAddress",
             "type": "publicKey"
           },
@@ -455,6 +459,10 @@ export type NftSocialMedia = {
           {
             "name": "timeStamp",
             "type": "i64"
+          },
+          {
+            "name": "status",
+            "type": "u8"
           }
         ]
       }
@@ -1054,6 +1062,10 @@ export const IDL: NftSocialMedia = {
         "kind": "struct",
         "fields": [
           {
+            "name": "postId",
+            "type": "u64"
+          },
+          {
             "name": "nftAddress",
             "type": "publicKey"
           },
@@ -1072,6 +1084,10 @@ export const IDL: NftSocialMedia = {
           {
             "name": "timeStamp",
             "type": "i64"
+          },
+          {
+            "name": "status",
+            "type": "u8"
           }
         ]
       }

@@ -14,6 +14,7 @@ import { getNftConfigPda, getPostPda, getAssociatedAddress } from "../../utils/p
 import useWorkspace, { Workspace } from "../../hooks/useWorkspace";
 import { Transaction } from "@solana/web3.js";
 import { Tweet } from "../../models";
+import { BN, workspace } from "@project-serum/anchor";
 
 // export const fetchTweets = async (program: Program, filters: any[] = []) => {
 //   const tweets = await program.account.tweet.all(filters);
@@ -365,15 +366,17 @@ import { Tweet } from "../../models";
 // });
 
 export const sendTweet = async (workspace: any, nftMintAddress: PublicKey, content: string) => {
-  // let mintKeypair = new PublicKey("Fkq1LTTWrCJpXSvdeAJBDUPXNUcx8v9Tm4Po65nr4dbt")
+  const errorAccount = {user: nftMintAddress, timestamp: Date.now(), state: null, tag: "", content: content}
+  const errorTweet = new Tweet(nftMintAddress, errorAccount)
   if (workspace) {
-    const program = workspace.program;
-    const nftConfigPda = await getNftConfigPda(nftMintAddress);
-    const postNum = await (await program.account.nftConfigPda.fetch(nftConfigPda[0])).postsNum;
-    const postPda = await getPostPda(nftMintAddress, postNum);
-    const tokenAddress = await getAssociatedAddress(nftMintAddress, workspace.wallet.publicKey);
     try {
-      await program.methods
+      const program = workspace.program;
+      const nftConfigPda = await getNftConfigPda(nftMintAddress);
+      const postNum = await (await program.account.nftConfigPda.fetch(nftConfigPda[0])).postsNum;
+      const postPda = await getPostPda(nftMintAddress, postNum);
+      const tokenAddress = await getAssociatedAddress(nftMintAddress, workspace.wallet.publicKey);
+
+      let tes = await program.methods
         .createPost(content)
         .accounts({
           payer: workspace.wallet.publicKey,
@@ -382,14 +385,47 @@ export const sendTweet = async (workspace: any, nftMintAddress: PublicKey, conte
           nftMint: nftMintAddress,
           nftToken: tokenAddress,
         })
-        .rpc();
-        
+        .rpc({skipPreflight: true});
+      console.log(tes)
       const account = {user: nftMintAddress, timestamp: Date.now(), state: null, tag: "", content: content}
       const tweet = new Tweet(nftMintAddress, account)
-      return {postPdaAddress:postPda[0], tweet: tweet, message: "Your tweet was sent successfully!", };
+      return {postPdaAddress:postPda[0], tweet: tweet, message: "Your tweet was sent successfully!", success: true};
     } catch (error: any) {
-      console.log(error);
-      return error;
+      console.log(error)
+      return {postPdaAddress:null, tweet: errorTweet, message: error.toString(), success: false};
     }
   }
+  return {postPdaAddress:null, tweet: errorTweet, message: "workspace error".toString(), success: false};
 };
+
+export const deleteTweet = async (workspace: any, nftMintAddress: PublicKey, postPdaAddress: PublicKey, postId: BN) => {
+  if (workspace) {
+    const program = workspace.program;
+    const nftConfigPda = await getNftConfigPda(nftMintAddress)
+    const tokenAddress = await getAssociatedAddress(nftMintAddress, workspace.wallet.publicKey)
+    try {
+      await program.methods.deletePost(postId)
+      .accounts({
+        payer: workspace.wallet.publicKey,
+        nftConfigPda: nftConfigPda[0],
+        postPda: postPdaAddress,
+        nftMint: nftMintAddress,
+        nftToken: tokenAddress
+      })
+      .rpc()
+      return {
+        success: true,
+        message: "Your tweet was deleted successfully!",
+      };
+    }catch(error: any) {
+      return {
+        success: false,
+        message: error.toString(),
+      };
+    }
+  }
+  return {
+    success: false,
+    message: "workspace error",
+  };
+}

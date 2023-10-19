@@ -7,7 +7,7 @@ use serde_json::json;
 pub fn create_post(ctx: Context<CreatePost>, content: String) -> Result<()> {
     let post_pda = &mut ctx.accounts.post_pda;
     let now_ts = Clock::get().unwrap().unix_timestamp;
-    **post_pda = PostPda::init(ctx.accounts.nft_config_pda.nft_mint.key(), content, 0, 0, now_ts);
+    **post_pda = PostPda::init(ctx.accounts.nft_config_pda.posts_num, ctx.accounts.nft_config_pda.nft_mint.key(), content, 0, 0, now_ts);
     let _ = ctx.accounts.nft_config_pda.increase_posts_num();
     let log = json!({"Func":"createPost","tokenAddress": &ctx.accounts.nft_mint.key().to_string(), "postsNum": &ctx.accounts.nft_config_pda.posts_num});
     msg!("{}", serde_json::to_string_pretty(&log).unwrap());

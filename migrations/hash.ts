@@ -8,7 +8,11 @@ export function create32BitsHash(
     return Buffer.from(hash, 'utf8').toJSON().data;
 }
 
-
+/**
+ * 计算hash
+ * @param input
+ * @param slice
+ */
 export function create32BitsHashString(
     input: Buffer | string,
     slice = 32,

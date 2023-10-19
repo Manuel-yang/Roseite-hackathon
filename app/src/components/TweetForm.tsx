@@ -43,13 +43,16 @@ export default function TweetForm({ forceTag }: { forceTag?: string }) {
     if (!canTweet) return;
     const toastId = notifyLoading("Transaction in progress. Please wait...", theme);
     // console.log(data)
+
+    const result = await sendTweet(effectiveTag, data.content);
+    notifyUpdate(toastId, result.message, result.tweet ? "success" : "error");
     jsConfetti.addConfetti({
       emojiSize: 20,
       confettiNumber: 120,
     });
-    const result = await sendTweet(effectiveTag, data.content);
-    notifyUpdate(toastId, result.message, result.tweet ? "success" : "error");
-
+    if (result.tweet) {
+      resetField("content")
+    }
     // if (result.tweet) {
     //   resetField("content");
     //   setTag("");

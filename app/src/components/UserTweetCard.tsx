@@ -7,8 +7,10 @@ import CopyToClipboardButton from "./CopyButton";
 import { bnToData, toLongCollapse } from "../utils";
 import CommentModal from "./CommentModal";
 import CommentExpandCard from "./CommentExpandCard";
+import UserTweetMenubar from "./UserTweetMenubar";
 
 export default function UserTweetCard({ tweet }: { tweet: UserTweet }) {
+  // console.log(tweet.postPdaAddress.toBase58())
   const { theme } = useTheme();
   const { nftsList, selectedNftId } = useNftScanner();
 
@@ -43,19 +45,27 @@ export default function UserTweetCard({ tweet }: { tweet: UserTweet }) {
     <div className={`card py-4 px-16 ${theme === "dark" ? "dark" : ""}`}>
       <div className="card-content">
         {/* Card Header */}
-        <div className="flex items-center mb-4 mt-3">
-          {selectedNftId !== undefined ? (
-            <img className="w-10 h-11 rounded-full mr-4" src={nftsList[selectedNftId]?.data.metadata.image} />
-          ) : (
-            <img className="w-10 rounded-full" src={`https://avatars.dicebear.com/api/jdenticon/undefined.svg`} />
-          )}
-          {selectedNftId !== undefined && (
-            <>
-              <span className="font-medium text-gray-500 mr-4 ">{`${nftsList[selectedNftId]?.data.name}`} </span>
-              <span className="text-gray-500 mr-3"> {`@${toLongCollapse(tweet.nftAddress)}`}</span>
-            </>
-          )}
-          <CopyToClipboardButton textToCopy={tweet.nftAddress.toString()} />
+        <div className="grid grid-cols-1 gap-4">
+          <div className="col-start-1 col-end-1">
+            <div className="flex items-center mb-4 mt-3">
+              {selectedNftId !== undefined ? (
+                <img className="w-10 h-11 rounded-full mr-4" src={nftsList[selectedNftId]?.data.metadata.image} />
+              ) : (
+                <img className="w-10 rounded-full" src={`https://avatars.dicebear.com/api/jdenticon/undefined.svg`} />
+              )}
+              {selectedNftId !== undefined && (
+                <>
+                  <span className="font-medium text-gray-500 mr-4 ">{`${nftsList[selectedNftId]?.data.name}`} </span>
+                  <span className="text-gray-500 mr-3"> {`@${toLongCollapse(tweet.nftAddress)}`}</span>
+                </>
+              )}
+              <CopyToClipboardButton textToCopy={tweet.nftAddress.toString()} />
+            </div>
+          </div>
+          
+          <div className="col-start-2 col-end-2 flex items-center mb-4 mt-3">
+            <UserTweetMenubar nftMintAddress={tweet.nftAddress} postPdaAddress={tweet.postPdaAddress} postId={tweet.postId}/>
+          </div>
         </div>
 
         {/* Card Content */}

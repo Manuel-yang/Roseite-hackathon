@@ -13,7 +13,6 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { mplCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 import * as solanaWeb3 from "@solana/web3.js";
 import { Metaplex } from '@metaplex-foundation/js';
-import { BN } from "bn.js";
 const { ShdwDrive } = require("@shadow-drive/sdk");
 const umi = createUmi("https://api.devnet.solana.com").use(mplCandyMachine());
 
@@ -22,8 +21,8 @@ let provider = anchor.getProvider()
 
 async function uplodateMetadata(id: String) {
   const privateKey = process.env.SECRET_KEY
-  let secretKey = Uint8Array.from([]);
-  const keypair = Keypair.fromSecretKey(secretKey);
+  const decodedKey1 = bs58.decode(privateKey);
+  const keypair = Keypair.fromSecretKey(decodedKey1);
   const connection = new Connection(
     clusterApiUrl("mainnet-beta"),
     "confirmed"
@@ -44,8 +43,9 @@ async function uplodateMetadata(id: String) {
 }
 
 async function editeMetadata(uri: string) {
-  let secretKey = Uint8Array.from([]);
-  const keypair = Keypair.fromSecretKey(secretKey);
+  const privateKey = process.env.SECRET_KEY
+  const decodedKey1 = bs58.decode(privateKey);
+  const keypair = Keypair.fromSecretKey(decodedKey1);
   const connection = new Connection(
     clusterApiUrl("mainnet-beta"),
     "confirmed"
@@ -127,7 +127,7 @@ describe("nft_social_media", () => {
     const programPda = await getProgramAdminPda()
     const nftConfigPda = await getNftConfigPda(mintKeypair.publicKey)
     const collectionDelegateRecord = await getCollectionDelegateRecordPda(candyMachineAuthorityPda[0])
-    const instruction = solanaWeb3.ComputeBudgetProgram.setComputeUnitLimit({ 
+    const instruction = solanaWeb3.ComputeBudgetProgram.setComputeUnitLimit({ // 设置计算单元
       units: 500_000,
     });
 
@@ -176,27 +176,27 @@ describe("nft_social_media", () => {
 
   });
 
-  // it("edit metadatafile", async () => {
-  //   // const metaplex = new Metaplex(provider.connection);
-  //   // let res = await metaplex.nfts().findByMint({mintAddress: mintKeypair.publicKey},{commitment: 'confirmed'})
-  //   // let uri = res.uri
-  //   // console.log("https://shdw-drive.genesysgo.net/98CKHH7X9Y1vAhZ8a5o2NKFt7zWWtic5tSGLC5VE9Rhm/6.json")
-  //   // await editeMetadata(uri)
-  // })
+  it("edit metadatafile", async () => {
+    // const metaplex = new Metaplex(provider.connection);
+    // let res = await metaplex.nfts().findByMint({mintAddress: mintKeypair.publicKey},{commitment: 'confirmed'})
+    // let uri = res.uri
+    // console.log("https://shdw-drive.genesysgo.net/98CKHH7X9Y1vAhZ8a5o2NKFt7zWWtic5tSGLC5VE9Rhm/6.json")
+    // await editeMetadata(uri)
+  })
 
   // it("create a post", async () => {
-  //   // let mintKeypair = new PublicKey("Fkq1LTTWrCJpXSvdeAJBDUPXNUcx8v9Tm4Po65nr4dbt")
-  //   const nftConfigPda = await getNftConfigPda(mintKeypair.publicKey)
+  //   let mintKeypair = new PublicKey("5caBby2A6cHmAuHLMeNAH5oM2B2rLhE8kvaD8YADUzwe")
+  //   const nftConfigPda = await getNftConfigPda(mintKeypair)
   //   const postNum = await (await program.account.nftConfigPda.fetch(nftConfigPda[0])).postsNum
-  //   const postPda = await getPostPda(mintKeypair.publicKey, postNum)
-  //   const tokenAddress = await getAssociatedAddress(mintKeypair.publicKey, adminWallet.publicKey)
+  //   const postPda = await getPostPda(mintKeypair, postNum)
+  //   const tokenAddress = await getAssociatedAddress(mintKeypair, adminWallet.publicKey)
   //   try {
   //     let tx = await program.methods.createPost("So, what is this for? Put it on your website as placeholder text. Print it out as a speech for your next affirmation circle and see if anyone can guess a computer wrote it. Use it to write the hottest new bestseller in the self-help section, or generate marketing copy for a new line of cheesecloth tunics or zero-point energy wands!So, what is this for? Put it on your website as placeholder text. Print it out as a speech for your next affirmation circle and see if anyone can guess a computer wrote it. Use it to write the hottest new bestseller in the self-help section, or generate marketing copy for a new line of cheesecloth tunics or zero-point energy wands!  or generate marketing copy for a new line of cheesecloth tunics or zero-point energy wands!")
   //     .accounts({
   //       payer: adminWallet.publicKey,
   //       nftConfigPda: nftConfigPda[0],
   //       postPda: postPda[0],
-  //       nftMint: mintKeypair.publicKey,
+  //       nftMint: mintKeypair,
   //       nftToken: tokenAddress
   //     })
   //     .signers([adminWallet])
@@ -213,17 +213,18 @@ describe("nft_social_media", () => {
   // })
 
   // it("delete a post", async () => {
-  //   const nftConfigPda = await getNftConfigPda(mintKeypair.publicKey)
+  //   let mintKeypair = new PublicKey("5caBby2A6cHmAuHLMeNAH5oM2B2rLhE8kvaD8YADUzwe")
+  //   const nftConfigPda = await getNftConfigPda(mintKeypair)
   //   const postNum = await (await program.account.nftConfigPda.fetch(nftConfigPda[0])).postsNum
-  //   const postPda = await getPostPda(mintKeypair.publicKey, new BN(Number(postNum)-1))
-  //   const tokenAddress = await getAssociatedAddress(mintKeypair.publicKey, adminWallet.publicKey)
+  //   const postPda = await getPostPda(mintKeypair, new anchor.BN(Number(postNum)-1))
+  //   const tokenAddress = await getAssociatedAddress(mintKeypair, adminWallet.publicKey)
   //   try {
-  //     let tx = await program.methods.deletePost(new BN(Number(postNum)-1))
+  //     let tx = await program.methods.deletePost(new anchor.BN(Number(postNum)-1))
   //     .accounts({
   //       payer: adminWallet.publicKey,
   //       nftConfigPda: nftConfigPda[0],
   //       postPda: postPda[0],
-  //       nftMint: mintKeypair.publicKey,
+  //       nftMint: mintKeypair,
   //       nftToken: tokenAddress
   //     })
   //     .signers([adminWallet])
@@ -232,7 +233,10 @@ describe("nft_social_media", () => {
   //     console.log(error)
   //   }
 
-  //   let res = await program.account.nftConfigPda.fetch(nftConfigPda[0])
+  //   const res = await (await program.account.postPda.fetch(postPda[0]))
   //   console.log(res)
+
+  //   // let res = await program.account.nftConfigPda.fetch(nftConfigPda[0])
+  //   // console.log(res)
   // })
 });

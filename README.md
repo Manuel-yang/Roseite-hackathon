@@ -65,7 +65,6 @@ It's worth noting that the core of this project lies in the implementation of th
 It's worth noting that the [Solana-6551 protocol](https://github.com/BTHDMS/solana6551) and account NFTization are the core of this project. SocialFi is just an interesting experiment with this concept. In the future, we hope to come up with some gameplay that subverts the existing NFT and GameFi mechanisms, enhancing user fun and experience while pushing further towards decentralization.
 
 The following image outlines the fundamental model structure of Solana-6551(tentative). Visit [Solana-6551 protocol](https://github.com/BTHDMS/solana6551) for detailed information.
-![Solana-6551](./images/Solana-6551.png)
 
 # SocialFi
 
@@ -173,3 +172,6 @@ yarn dev
 ```
 
 start frontend
+
+# Frontend Demo
+![demo](./images/frontend-demo.jpg)

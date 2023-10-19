@@ -20,14 +20,14 @@ export default function CopyToClipboardButton({ textToCopy }: { textToCopy: stri
   return (
     <button
       onClick={handleCopyClick}
-      className={`font-bold py-1 px-1 rounded ${theme === "dark" ? "bg-yellow-200" : "border border-black"}`}
+      className={`font-bold py-1 px-1 rounded ${theme === "dark" ? "bg-[#191c29]" : "border border-black"}`}
     >
       {!copied ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
-          fill="currentColor"
+          fill="#14F195"
           className="bi bi-copy"
           viewBox="0 0 16 16"
         >
