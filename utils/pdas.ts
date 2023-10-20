@@ -139,6 +139,23 @@ export const getPostPda = async (
   return data
 }
 
+export const getPostReviewPda = async (
+  post_address: PublicKey,
+  num
+) => {
+  const data = (await anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("review_pda"),
+      post_address.toBuffer(),
+      new BN(num).toArrayLike(Buffer, "le", 8),
+    ],
+    PROGRAM_ID
+  ))
+  return data
+}
+
+
+
 export const getCompoundCounterPda = async (
   candy_machine: PublicKey,
   user: PublicKey

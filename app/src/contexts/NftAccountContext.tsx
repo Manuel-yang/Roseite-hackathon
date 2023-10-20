@@ -27,6 +27,7 @@ export type postPdaAccount = {
 };
 
 interface NftAccountState {
+  initStatus: boolean;
   selectedNft: nftInfo;
   nftConfigPdaAccount: nftConfigPdaAccount;
   postPdaAddressList: PublicKey[];
@@ -42,6 +43,7 @@ export function NftAccountProvidr({ children }: { children: ReactNode }) {
   const workspace = useWorkspace();
   const NftScanner = useNftScanner();
   const [selectedNft, setSelectedNft] = useState<nftInfo>(null!);
+  const [initStatus, setInitStatus] = useState<boolean>(false);
   const [nftConfigPdaAccount, setNftConfigPdaAccount] = useState<nftConfigPdaAccount>(null!);
   const [postPdaAddressList, setPostPdaAddressList] = useState<PublicKey[]>([]);
   const [rawPostPdaAccountList, setRawPostPdaAccountList] = useState<postPdaAccount[]>([]);
@@ -95,11 +97,13 @@ export function NftAccountProvidr({ children }: { children: ReactNode }) {
         return postPdaAccount.status == 0
       })
       setPostPdaAccountList(sortByTimestamp.reverse());
+      setInitStatus(true)
     }
   }, [rawPostPdaAccountList]);
 
   const value = useMemo(
     () => ({
+      initStatus,
       selectedNft,
       nftConfigPdaAccount,
       postPdaAddressList,
@@ -110,6 +114,7 @@ export function NftAccountProvidr({ children }: { children: ReactNode }) {
       setPostPdaAccountList,
     }),
     [
+      initStatus,
       selectedNft,
       nftConfigPdaAccount,
       postPdaAddressList,

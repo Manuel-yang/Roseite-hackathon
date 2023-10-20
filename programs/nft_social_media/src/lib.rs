@@ -34,6 +34,10 @@ pub mod nft_social_media {
     pub fn delete_post(ctx: Context<DeletePost>, post_id:u64) -> Result<()> {
         instructions::delete_post(ctx, post_id)
     }
+
+    pub fn create_post_review(ctx: Context<CreateReviewPost>, content: String) -> Result<()> {
+        instructions::create_review_post(ctx, content)
+    }
 }
 
 #[derive(Accounts)]

@@ -69,7 +69,6 @@ export function TweetsProvider({ children }: { children: ReactNode }) {
           const newPostPdaAddress = await workspace.program.account.postPda.fetch(result.postPdaAddress)
           const tempPostPdaAccount = newPostPdaAddress as unknown as postPdaAccount
           tempPostPdaAccount.postPdaAddress = result.postPdaAddress
-          console.log(tempPostPdaAccount)
           setPostPdaAddressList((prev) => [...prev, result.postPdaAddress]);
           setRawPostPdaAccountList((prev) => [...prev, tempPostPdaAccount])
         }

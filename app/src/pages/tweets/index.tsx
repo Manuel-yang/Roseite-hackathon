@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { Spinner } from 'flowbite-react';
 import RecentTweets from "../../components/RecentTweets";
 import TweetForm from "../../components/TweetForm";
 import useTweets from "../../hooks/useTweets";
@@ -14,7 +15,7 @@ export default function Tweets() {
   const workspace = useWorkspace();
   const { connected } = useWallet();
   const { nftsList, nftLoading, selectedNftId, setSelectedNftId } = useNftScanner();
-  const { postPdaAccountList } = useNftAccount();
+  const { postPdaAccountList, initStatus } = useNftAccount();
   const { tweets, recentTweets, loading, hasMore, loadMore, prefetch, deleteTweet } = useTweets();
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -50,20 +51,18 @@ export default function Tweets() {
             />
           ) : null}
           <TweetForm />
-          {workspace ? (
-            <div className="space-y-4">
-              {postPdaAccountList.map((tweet, index) => (
-                <UserTweetCard key={index} tweet={tweet} />
-              ))}
-              {/* <TweetList
-                tweets={tweets}
-                loading={loading}
-                hasMore={hasMore}
-                loadMore={loadMore}
-                deleteTweet={deleteTweet}
-              /> */}
-            </div>
-          ) : null}
+          <div >
+            {initStatus && workspace 
+            ? ((
+                <div className="space-y-4">
+                  {postPdaAccountList.map((tweet, index) => (
+                    <UserTweetCard key={index} tweet={tweet} />
+                  ))}
+                </div>
+              ))
+            // : (<Spinner aria-label="Center-aligned spinner example" />)}
+            : null}
+          </div>
         </div>
         <div className="relative mb-8 w-72">
           <div className="duration-400 fixed h-full w-72 pb-44 transition-all">

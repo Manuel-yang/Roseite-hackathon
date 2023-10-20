@@ -384,6 +384,47 @@ export type NftSocialMedia = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "createPostReview",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "postPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reviewPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -478,6 +519,46 @@ export type NftSocialMedia = {
           },
           {
             "name": "programPdaBump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "reviewPda",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nftMintAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "reviewId",
+            "type": "u64"
+          },
+          {
+            "name": "reviewedPostPdaAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "reviewNum",
+            "type": "u64"
+          },
+          {
+            "name": "likeNum",
+            "type": "u64"
+          },
+          {
+            "name": "timeStamp",
+            "type": "i64"
+          },
+          {
+            "name": "status",
             "type": "u8"
           }
         ]
@@ -1009,6 +1090,47 @@ export const IDL: NftSocialMedia = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "createPostReview",
+      "accounts": [
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "postPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "reviewPda",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -1103,6 +1225,46 @@ export const IDL: NftSocialMedia = {
           },
           {
             "name": "programPdaBump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "reviewPda",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nftMintAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "reviewId",
+            "type": "u64"
+          },
+          {
+            "name": "reviewedPostPdaAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "reviewNum",
+            "type": "u64"
+          },
+          {
+            "name": "likeNum",
+            "type": "u64"
+          },
+          {
+            "name": "timeStamp",
+            "type": "i64"
+          },
+          {
+            "name": "status",
             "type": "u8"
           }
         ]

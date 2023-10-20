@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { Program } from "@project-serum/anchor";
 import { NftSocialMedia } from "../target/types/nft_social_media";
 import { Connection, Keypair, PublicKey, clusterApiUrl } from "@solana/web3.js";
-import { getAssociatedAddress, getAuthorityPda, getCandyMachineAuthorityPda, getCollectionDelegateRecordPda, getCounterPda, getMasterEditionPDA, getMetadataPDA, getNftConfigPda, getPostPda, getProgramAdminPda } from "../utils/pdas";
+import { getAssociatedAddress, getAuthorityPda, getCandyMachineAuthorityPda, getCollectionDelegateRecordPda, getCounterPda, getMasterEditionPDA, getMetadataPDA, getNftConfigPda, getPostPda, getPostReviewPda, getProgramAdminPda } from "../utils/pdas";
 import bs58 from 'bs58';
 import { findCandyGuardPda } from "@metaplex-foundation/mpl-candy-machine";
 import { publicKey } from "@metaplex-foundation/umi";
@@ -238,5 +238,36 @@ describe("nft_social_media", () => {
 
   //   // let res = await program.account.nftConfigPda.fetch(nftConfigPda[0])
   //   // console.log(res)
+  // })
+
+  // it("review a post ", async () => {
+  //   try {
+  //   let mintKeypair = new PublicKey("5caBby2A6cHmAuHLMeNAH5oM2B2rLhE8kvaD8YADUzwe")
+  //   const nftConfigPda = await getNftConfigPda(mintKeypair)
+  //   const postNum = await (await program.account.nftConfigPda.fetch(nftConfigPda[0])).postsNum
+  //   const postPda = await getPostPda(mintKeypair, new anchor.BN(Number(postNum)-1))
+  //   const reviewNum = await (await program.account.postPda.fetch(postPda[0])).reviewNum
+  //   const postReviewPda = await getPostReviewPda(postPda[0], reviewNum)
+  //   const tokenAddress = await getAssociatedAddress(mintKeypair, adminWallet.publicKey)
+ 
+  //     let tx = await program.methods.createPostReview("test for review")
+  //     .accounts({
+  //       payer: adminWallet.publicKey,
+  //       postPda: postPda[0],
+  //       reviewPda: postReviewPda[0],
+  //       nftMint: mintKeypair,
+  //       nftToken: tokenAddress
+  //     })
+  //     .signers([adminWallet])
+  //     .rpc()
+  //     const res = await (await program.account.reviewPda.fetch(postReviewPda[0]))
+  //     return
+  //   }catch(error: any) {
+  //     console.log(error)
+  //   }
+
+
+
+
   // })
 });

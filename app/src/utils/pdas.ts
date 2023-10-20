@@ -37,19 +37,6 @@ export const getMasterEditionPDA = async (
   return data
 }
 
-// export const getMetadataDelegateRecord = async (
-//   mintKey: PublicKey,
-// ) => { 
-//   const data = (await anchor.web3.PublicKey.findProgramAddressSync(
-//     [
-//       Buffer.from("metadata"),
-//       TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-//       mintKey.toBuffer(),
-//     ],
-//     TOKEN_METADATA_PROGRAM_ID,
-//   ))
-// }
-
 export const getAuthorityPda = async (
   mintKey: PublicKey,
 ) => {
@@ -132,6 +119,21 @@ export const getPostPda = async (
     [
       Buffer.from("post_pda"),
       mint_address.toBuffer(),
+      new BN(num).toArrayLike(Buffer, "le", 8),
+    ],
+    PROGRAM_ID
+  ))
+  return data
+}
+
+export const getPostCommentPda = async (
+  post_address: PublicKey,
+  num: any
+) => {
+  const data = (await anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("review_pda"),
+      post_address.toBuffer(),
       new BN(num).toArrayLike(Buffer, "le", 8),
     ],
     PROGRAM_ID
